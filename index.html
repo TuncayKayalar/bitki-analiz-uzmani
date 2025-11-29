@@ -6,66 +6,166 @@
     <title>Bitki Analiz Uzmanı</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', sans-serif; }
-        .loader { border-top-color: #3498db; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Markdown Stilleri */
-        #analysisResult h1 { font-size: 1.5rem; font-weight: bold; color: #166534; margin-top: 1rem; border-bottom: 2px solid #ddd; }
-        #analysisResult h2 { font-size: 1.25rem; font-weight: bold; color: #15803d; margin-top: 1rem; }
-        #analysisResult ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
-        #analysisResult a { color: #2563eb; text-decoration: underline; }
+        
+        /* Yükleme Animasyonu */
+        .loader {
+            border-top-color: #16a34a; /* Green-600 */
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Markdown Sonuçları İçin Özel Stiller */
+        .prose h1 { @apply text-2xl font-bold text-green-800 border-b border-green-200 pb-2 mb-4 mt-6; }
+        .prose h2 { @apply text-xl font-bold text-green-700 mt-6 mb-3 flex items-center; }
+        .prose h3 { @apply text-lg font-semibold text-gray-800 mt-4 mb-2; }
+        .prose ul { @apply list-disc list-inside space-y-1 text-gray-700 mb-4 ml-2; }
+        .prose li { @apply marker:text-green-500; }
+        .prose strong { @apply text-gray-900 font-bold; }
+        .prose p { @apply text-gray-700 leading-relaxed mb-3; }
+        .prose a { @apply text-blue-600 hover:text-blue-800 hover:underline font-medium transition-colors; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 
-    <div class="container mx-auto max-w-4xl w-full bg-white rounded-xl shadow-2xl overflow-hidden">
-        <header class="bg-green-700 text-white p-6 text-center">
-            <h1 class="text-3xl font-bold"><i class="fa-solid fa-leaf mr-2"></i> Bitki Analiz Uzmanı</h1>
-            <p class="text-green-100">Yapay Zeka Destekli Tarım ve Bitki Rehberi</p>
-        </header>
+<body class="bg-gray-50 min-h-screen text-gray-800">
 
-        <main class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center flex flex-col items-center justify-center bg-gray-50">
-                    <i class="fa-solid fa-camera text-4xl text-gray-400 mb-2"></i>
-                    <label class="cursor-pointer bg-white border px-4 py-2 rounded shadow hover:bg-gray-100">
-                        Fotoğraf Seç
-                        <input type="file" id="imageUpload" class="hidden" accept="image/*">
-                    </label>
-                    <img id="imagePreview" class="hidden mt-4 h-40 rounded shadow">
-                </div>
+    <nav class="bg-gradient-to-r from-green-700 to-emerald-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-leaf text-2xl animate-pulse"></i>
                 <div>
-                    <textarea id="prompt" rows="6" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-green-500" placeholder="Bitkinizdeki sorunu anlatın..."></textarea>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight">Bitki Analiz Uzmanı</h1>
+                    <p class="text-xs text-green-100 opacity-90 hidden md:block">Yapay Zeka Destekli Tarım Asistanı</p>
                 </div>
             </div>
+            <a href="https://github.com/TuncayKayalar" target="_blank" class="text-white hover:text-green-200 transition">
+                <i class="fa-brands fa-github text-2xl"></i>
+            </a>
+        </div>
+    </nav>
 
-            <button id="analyzeButton" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition">
-                <i class="fa-solid fa-microscope mr-2"></i> Analiz Et
-            </button>
-
-            <div id="loadingIndicator" class="hidden text-center py-6">
-                <div class="loader w-10 h-10 border-4 border-gray-200 rounded-full mx-auto"></div>
-                <p class="mt-2 text-gray-600">Bitki inceleniyor...</p>
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <h2 class="text-lg font-semibold text-gray-800 mb-1">Hoş Geldiniz! 🌱</h2>
+                <p class="text-gray-600 text-sm">Bitkinizin fotoğrafını yükleyin, yapay zeka türünü tanısın, hastalıklarını bulsun ve size özel bakım takvimi hazırlasın.</p>
             </div>
-            <div id="errorContainer" class="hidden bg-red-100 text-red-700 p-4 rounded mt-4"></div>
+            <div class="flex items-center gap-3 bg-green-50 px-4 py-2 rounded-lg border border-green-100">
+                <i class="fa-solid fa-robot text-green-600"></i>
+                <div class="text-left">
+                    <p class="text-xs text-gray-500 font-semibold">AI Modeli</p>
+                    <p class="text-sm text-green-700 font-bold">Gemini 1.5 Flash</p>
+                </div>
+            </div>
+        </div>
 
-            <div id="analysisResult" class="mt-6 prose max-w-none hidden bg-gray-50 p-6 rounded-lg border"></div>
-        </main>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <div class="lg:col-span-4 space-y-6">
+                
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden group hover:shadow-md transition duration-300">
+                    <div class="p-4 bg-gray-50 border-b border-gray-100">
+                        <h3 class="font-semibold text-gray-700 flex items-center gap-2">
+                            <i class="fa-solid fa-camera text-green-600"></i> Fotoğraf
+                        </h3>
+                    </div>
+                    <div class="p-6 text-center">
+                        <label for="imageUpload" class="cursor-pointer flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-gray-300 rounded-lg hover:bg-green-50 hover:border-green-400 transition duration-300">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6" id="uploadPlaceholder">
+                                <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-3 group-hover:text-green-500 transition"></i>
+                                <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Yüklemek için tıklayın</span></p>
+                                <p class="text-xs text-gray-400">PNG, JPG (Maks. 5MB)</p>
+                            </div>
+                            <img id="imagePreview" class="hidden w-full h-full object-cover rounded-lg" />
+                        </label>
+                        <input id="imageUpload" type="file" class="hidden" accept="image/*" />
+                        
+                        <button id="removeImageBtn" class="hidden mt-3 text-xs text-red-500 hover:text-red-700 font-medium w-full text-center">
+                            <i class="fa-solid fa-trash mr-1"></i> Fotoğrafı Kaldır
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Eklemek İstedikleriniz (Opsiyonel)</label>
+                    <textarea id="prompt" rows="4" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition outline-none resize-none" placeholder="Örn: Yapraklarda sararma var, ne yapmalıyım?"></textarea>
+                </div>
+
+                <button id="analyzeButton" class="w-full bg-green-600 hover:bg-green-700 text-white text-lg font-bold py-4 rounded-xl shadow-lg shadow-green-200 transform transition hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Analiz Et
+                </button>
+
+            </div>
+
+            <div class="lg:col-span-8">
+                
+                <div id="welcomeState" class="h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 bg-white rounded-2xl border border-dashed border-gray-300">
+                    <div class="bg-green-50 p-6 rounded-full mb-6 animate-bounce-slow">
+                        <i class="fa-solid fa-seedling text-5xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Analiz Sonucu Bekleniyor</h3>
+                    <p class="text-gray-500 max-w-md mx-auto">Sol taraftan bitkinizin fotoğrafını yükleyin ve "Analiz Et" butonuna basarak yapay zeka raporunu oluşturun.</p>
+                </div>
+
+                <div id="loadingState" class="hidden h-full min-h-[400px] flex flex-col items-center justify-center text-center p-8 bg-white rounded-2xl shadow-sm border border-gray-100">
+                    <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-16 w-16 mb-6"></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Bitkiniz İnceleniyor...</h3>
+                    <p class="text-gray-500">Görüntü işleniyor, hastalıklar taranıyor ve bakım planı oluşturuluyor.</p>
+                    <div class="w-full max-w-xs bg-gray-200 rounded-full h-2.5 mt-6 overflow-hidden">
+                        <div class="bg-green-600 h-2.5 rounded-full w-2/3 animate-pulse"></div>
+                    </div>
+                </div>
+
+                <div id="errorState" class="hidden bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+                    <div class="flex items-start gap-4">
+                        <i class="fa-solid fa-circle-exclamation text-red-600 text-xl mt-1"></i>
+                        <div>
+                            <h3 class="font-bold text-red-800">Bir Hata Oluştu</h3>
+                            <p id="errorMessage" class="text-sm text-red-600 mt-1">Sunucuya bağlanılamadı.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="resultState" class="hidden bg-white rounded-2xl shadow-lg border border-gray-100 p-8 prose max-w-none">
+                    </div>
+
+            </div>
+        </div>
+
+        <footer class="mt-12 text-center text-gray-400 text-sm pb-8">
+            <p>&copy; 2024 Bitki Analiz Uzmanı | <i class="fa-solid fa-code text-green-500 mx-1"></i> ile geliştirildi.</p>
+        </footer>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
+        // Elementler
         const imageUpload = document.getElementById('imageUpload');
         const imagePreview = document.getElementById('imagePreview');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const removeImageBtn = document.getElementById('removeImageBtn');
         const promptInput = document.getElementById('prompt');
         const analyzeButton = document.getElementById('analyzeButton');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const errorContainer = document.getElementById('errorContainer');
-        const analysisResult = document.getElementById('analysisResult');
         
+        // State Konteynerleri
+        const welcomeState = document.getElementById('welcomeState');
+        const loadingState = document.getElementById('loadingState');
+        const errorState = document.getElementById('errorState');
+        const resultState = document.getElementById('resultState');
+        const errorMessage = document.getElementById('errorMessage');
+
         let base64ImageData = null;
 
+        // Fotoğraf Yükleme İşlemi
         imageUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -74,47 +174,83 @@
                     base64ImageData = e.target.result.split(',')[1];
                     imagePreview.src = e.target.result;
                     imagePreview.classList.remove('hidden');
+                    uploadPlaceholder.classList.add('hidden');
+                    removeImageBtn.classList.remove('hidden');
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // SYSTEM PROMPT (Zeka Talimatı)
+        // Fotoğraf Kaldırma
+        removeImageBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            imageUpload.value = '';
+            base64ImageData = null;
+            imagePreview.classList.add('hidden');
+            imagePreview.src = '';
+            uploadPlaceholder.classList.remove('hidden');
+            removeImageBtn.classList.add('hidden');
+        });
+
+        // SYSTEM PROMPT (Zekaya Talimat)
         const systemPrompt = `
-        Sen uzman bir ziraat mühendisi ve botanikçisin. 
-        Görevin: Kullanıcının gönderdiği bitki fotoğrafını veya sorusunu analiz etmek.
+        Sen profesyonel bir Ziraat Mühendisi ve Botanikçisin.
+        Kullanıcının gönderdiği bitki fotoğrafını ve sorularını analiz et.
+
+        RAPOR FORMATI (Markdown Kullan):
         
-        Rapor Formatı:
-        1. **Teşhis:** Bitki türü ve görülen sorun (hastalık, zararlı, besin eksikliği vb.).
-        2. **Nedenler:** Bu soruna yol açan sebepler.
-        3. **Çözüm ve Tedavi:** İlaçlı ve ilaçsız mücadele yöntemleri.
-        4. **Bakım Tavsiyeleri:** Sulama, ışık ve gübreleme önerileri.
-        5. **Video Önerisi:** Konuyla ilgili Youtube'da aranabilecek anahtar kelimeler.
+        # 🌿 [Bitki Adı] Analiz Raporu
         
-        Cevabı Markdown formatında, okunaklı ve başlıklar halinde ver.
+        ## 🩺 1. Teşhis ve Durum
+        * **Bitki Türü:** (Bilimsel adıyla)
+        * **Tespit Edilen Sorun:** (Hastalık, zararlı veya stres faktörü. Sorun yoksa "Sağlıklı" yaz)
+        * **Güven Oranı:** (Yüksek/Orta/Düşük)
+
+        ## 🔬 2. Nedenler ve Belirtiler
+        * Gözlemlenen belirtileri ve buna yol açan olası sebepleri (aşırı sulama, mantar, böcek vb.) detaylıca açıkla.
+
+        ## 💊 3. Tedavi ve Çözüm Önerileri
+        * **Organik/Ev Yapımı Çözüm:** (Evdeki malzemelerle yapılabilecekler)
+        * **Kimyasal Mücadele:** (Gerekliyse hangi etken maddeli ilaçlar)
+        * **Uygulama Şekli:** (Dozaj ve sıklık)
+
+        ## 💧 4. Bakım Takvimi (Sulama & Gübreleme)
+        * **Sulama:** (Yaz/Kış sıklığı)
+        * **Işık:** (Konumlandırma önerisi)
+        * **Gübreleme:** (Hangi dönemde ne verilmeli)
+        
+        ## 📺 5. Faydalı Kaynaklar
+        * Google Arama aracı ile konuyla ilgili en faydalı 2 YouTube videosunu bul ve linklerini ver.
         `;
 
+        // Analiz Fonksiyonu
         analyzeButton.addEventListener('click', async () => {
-            const userPrompt = promptInput.value;
-            if (!userPrompt && !base64ImageData) {
-                errorContainer.textContent = "Lütfen bir fotoğraf yükleyin veya açıklama yazın.";
-                errorContainer.classList.remove('hidden');
+            const userText = promptInput.value;
+
+            if (!userText && !base64ImageData) {
+                alert("Lütfen bir fotoğraf yükleyin veya açıklama yazın.");
                 return;
             }
 
-            // UI Sıfırla
-            loadingIndicator.classList.remove('hidden');
-            errorContainer.classList.add('hidden');
-            analysisResult.classList.add('hidden');
+            // UI Değişiklikleri
+            welcomeState.classList.add('hidden');
+            resultState.classList.add('hidden');
+            errorState.classList.add('hidden');
+            loadingState.classList.remove('hidden');
             analyzeButton.disabled = true;
+            analyzeButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> İşleniyor...';
 
             try {
-                // API'ye İstek Gönder (Backend'e)
+                // Prompt Hazırlığı
+                let fullPrompt = systemPrompt;
+                if(userText) fullPrompt += "\n\nKullanıcı Notu: " + userText;
+
+                // BACKEND İSTEĞİ
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        prompt: systemPrompt + "\n\nKullanıcı Sorusu: " + userPrompt,
+                        prompt: fullPrompt,
                         image: base64ImageData,
                         mimeType: "image/jpeg"
                     })
@@ -127,16 +263,27 @@
                 }
 
                 // Sonucu Göster
-                analysisResult.innerHTML = marked.parse(data.result);
-                analysisResult.classList.remove('hidden');
+                resultState.innerHTML = marked.parse(data.result);
+                loadingState.classList.add('hidden');
+                resultState.classList.remove('hidden');
+
+                // Mobil cihazlarda sonuca kaydır
+                resultState.scrollIntoView({ behavior: 'smooth' });
 
             } catch (error) {
                 console.error(error);
-                errorContainer.textContent = "Hata: " + error.message;
-                errorContainer.classList.remove('hidden');
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                errorMessage.textContent = "Hata: " + error.message;
+                
+                // Canvas ortamı uyarısı (Kullanıcı yerelde test ediyorsa)
+                if(error.message.includes("404") || error.message.includes("JSON")) {
+                    errorMessage.textContent = "Hata: Backend API'ye ulaşılamadı. Bu kod sadece Vercel üzerinde çalışır, yerel önizlemede çalışmaz.";
+                }
+
             } finally {
-                loadingIndicator.classList.add('hidden');
                 analyzeButton.disabled = false;
+                analyzeButton.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Analiz Et';
             }
         });
     </script>
