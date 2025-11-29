@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // 3. Google'a gönderilecek paketi hazırla
     let parts = [{ text: prompt }];
@@ -48,3 +48,4 @@ module.exports = async (req, res) => {
     res.status(500).json({ error: error.message || "Sunucu hatası oluştu." });
   }
 };
+
