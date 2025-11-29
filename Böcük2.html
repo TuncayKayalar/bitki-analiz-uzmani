@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitki Analiz Uzmanı</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (ikonlar için) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Temel stiller */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Yükleme animasyonu için */
+        .loader {
+            border-top-color: #3498db;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Markdown çıktısındaki başlıklar için stil */
+        #analysisResult h1 {
+            font-size: 1.875rem; /* 3xl */
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb; /* gray-200 */
+            padding-bottom: 0.25rem;
+            color: #166534; /* green-800 */
+        }
+
+        #analysisResult h2 {
+            font-size: 1.5rem; /* 2xl */
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #15803d; /* green-700 */
+            border-left: 4px solid #22c55e; /* green-500 */
+            padding-left: 0.75rem;
+        }
+        
+        #analysisResult h3 {
+            font-size: 1.25rem; /* xl */
+            font-weight: 600;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #1f2937; /* gray-800 */
+        }
+
+        #analysisResult ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        #analysisResult p {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+            color: #374151; /* gray-700 */
+        }
+
+        #analysisResult a {
+            color: #2563eb; /* blue-600 */
+            text-decoration: none;
+            font-weight: 500;
+            background-color: #eff6ff;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        #analysisResult a:hover {
+            background-color: #dbeafe;
+            text-decoration: underline;
+        }
+        
+        #analysisResult strong {
+            font-weight: 600;
+            color: #111827; /* gray-900 */
+        }
+        
+        /* Grafik stilleri */
+        .bar-chart-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            width: 100%;
+            height: 160px;
+            background-color: #f9fafb; /* gray-50 */
+            border: 1px solid #e5e7eb; /* gray-200 */
+            border-radius: 0.5rem;
+            padding: 1rem 0.5rem;
+            box-sizing: border-box;
+            gap: 4px;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .bar-chart-month {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            flex-grow: 1;
+            text-align: center;
+            font-size: 0.7rem; /* text-xs */
+            color: #6b7280; /* gray-500 */
+            height: 100%;
+        }
+
+        .bar {
+            width: 80%;
+            border-radius: 0.25rem 0.25rem 0 0;
+            transition: height 0.5s ease-out;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <div class="container mx-auto max-w-4xl w-full bg-white rounded-xl shadow-2xl overflow-hidden">
+        
+        <!-- Başlık Alanı -->
+        <header class="bg-gradient-to-r from-green-600 to-emerald-700 text-white p-6 shadow-md">
+            <h1 class="text-3xl font-bold flex items-center justify-center">
+                <i class="fa-solid fa-leaf mr-3"></i>
+                Bitki Analiz Uzmanı
+            </h1>
+            <p class="text-center text-green-100 mt-2">Bitki sağlığı, gübreleme ve sulama için yapay zeka destekli rehberiniz.</p>
+        </header>
+
+        <!-- Ana İçerik Alanı -->
+        <main class="p-6 md:p-8">
+
+            <!-- Giriş Alanı (Metin ve Fotoğraf) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Fotoğraf Yükleme -->
+                <div class="flex flex-col items-center justify-center bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center h-full hover:bg-gray-100 transition duration-300 group">
+                    <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-3 group-hover:text-green-500 transition"></i>
+                    <label for="imageUpload" class="cursor-pointer bg-white text-gray-700 font-semibold py-2 px-4 border border-gray-300 rounded-lg shadow-sm hover:bg-green-50 hover:text-green-700 hover:border-green-300 transition">
+                        Fotoğraf Yükle
+                    </label>
+                    <input type="file" id="imageUpload" class="hidden" accept="image/*">
+                    <p class="text-xs text-gray-500 mt-3">PNG, JPG, veya WEBP.</p>
+                    <img id="imagePreview" src="" alt="Yüklenen Bitki" class="hidden mt-4 rounded-lg object-cover h-40 w-40 shadow-sm border border-gray-200">
+                </div>
+
+                <!-- Metin Açıklaması -->
+                <div class="flex flex-col h-full">
+                    <label for="prompt" class="block text-sm font-medium text-gray-700 mb-2">Bitki Durumu veya Sorunuz (Opsiyonel)</label>
+                    <textarea id="prompt" rows="5"
+                        class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition resize-none h-full"
+                        placeholder="Örn: 'Yapraklarda sarı lekeler ve beyaz pamukçuklar var. Bu nedir?' veya 'Buğday için gübreleme takvimi nedir?'"></textarea>
+                </div>
+            </div>
+            
+            <!-- Konum ve Analiz Butonları -->
+            <div class="flex flex-col md:flex-row gap-4 mb-6">
+                 <!-- Konum Butonu -->
+                 <button id="locationButton" class="w-full md:w-auto flex-shrink-0 flex items-center justify-center px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    <i class="fa-solid fa-location-crosshairs mr-2"></i>
+                    <span id="locationText">Hava Durumu için Konum Al</span>
+                </button>
+
+                <!-- Analiz Butonu -->
+                <button id="analyzeButton" class="w-full md:flex-grow px-6 py-3 bg-green-600 text-white text-lg font-bold rounded-lg shadow-lg hover:bg-green-700 transition duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                    <i class="fa-solid fa-microscope mr-2"></i>
+                    Analiz Et
+                </button>
+            </div>
+
+
+            <!-- Sonuç Alanı -->
+            <div id="resultContainer" class="mt-6">
+                <!-- Yükleniyor... -->
+                <div id="loadingIndicator" class="hidden flex-col items-center justify-center p-12 text-center">
+                    <div class="loader w-12 h-12 rounded-full border-4 border-gray-200 mb-4"></div>
+                    <p class="text-lg font-semibold text-gray-700">Bitkiniz analiz ediliyor...</p>
+                    <p class="text-sm text-gray-500 mt-1">Görüntü sunucuya iletiliyor, yapay zeka yanıtı bekleniyor...</p>
+                </div>
+                
+                <!-- Hata Mesajı -->
+                <div id="errorContainer" class="hidden p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                    <h3 class="font-bold flex items-center"><i class="fa-solid fa-circle-exclamation mr-2"></i>Hata!</h3>
+                    <p id="errorMessage" class="mt-1">Analiz yapılırken bir sorun oluştu.</p>
+                </div>
+                
+                <!-- Analiz Sonucu -->
+                <div id="analysisResult" class="p-8 bg-white border border-gray-200 rounded-lg shadow-inner prose max-w-none">
+                    <!-- Sonuç buraya eklenecek -->
+                    <div class="text-center text-gray-400 py-10">
+                        <i class="fa-solid fa-file-medical text-6xl mb-4 opacity-50"></i>
+                        <p class="text-xl font-medium">Analiz raporu burada görüntülenecek.</p>
+                        <p class="text-sm mt-2">Lütfen fotoğraf yükleyin veya soru sorun, ardından 'Analiz Et' butonuna basın.</p>
+                        <p class="text-xs text-orange-500 mt-4">Not: Bu sürüm Backend API gerektirir. Yerel önizlemede çalışmaz.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Marked.js (Markdown'ı HTML'e çevirmek için) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Ana JavaScript Kodu -->
+    <script>
+        // --- API Ayarları ---
+        
+        // ÖNEMLİ: Hava durumu özelliği Frontend'de kaldığı için bu anahtara burada ihtiyacımız var.
+        // openweathermap.org sitesinden ücretsiz bir API anahtarı alıp buraya yapıştırın.
+        const WEATHER_API_KEY = "BURAYA_KENDI_API_ANAHTARINIZI_YAPISTIRIN"; 
+        
+        // NOT: Gemini API anahtarı artık burada DEĞİL, sunucu tarafında (api/analyze.js) saklanıyor.
+
+        // Gemini API'nin sistem talimatı (prompt). Modelin nasıl davranacağını belirler.
+        const systemPrompt = `
+Sen, 'Agro-Botanist AI' adlı bir tarımsal üretim ve bitki sağlığı uzmanı yapay zekâsısın.
+Kullanıcı, bir bitki fotoğrafı, açıklama veya konum bilgisi gönderdiğinde aşağıdaki adımları uygula.
+Amacın; bitki türünü, hastalık veya zararlıyı tanımak, uygun ilaçlama–gübreleme–sulama planı önermek ve bakım takvimi oluşturmaktır.
+Google Arama aracını **mutlaka ve aktif olarak kullanarak**, önerilerini destekleyecek (ör. ilaçlama, gübreleme, bakım) güncel YouTube videoları bulmak ve rapor formatına eklemek ZORUNDASIN.
+
+Eğer kullanıcı konum bilgisi ve hava durumu tahmini (örn: "Konum: Karabük, 5 günlük tahmin: Yağmurlu...") sağlarsa, bu veriyi analiz ederek **"5 Günlük Hava Durumuna Bağlı Bakım Takvimi"** oluşturmalısın. Bu takvimde her gün için hava durumuna göre özel bir öneri ver (örn: "Yağmur var, sulama yapma").
+
+Raporunu AŞAĞIDAKİ FORMATTA OLUŞTUR:
+
+# 🌿 Bitki Analiz Raporu
+* **Analiz Tarihi:** [Bugünün Tarihi]
+* **Lokasyon:** [Şehir/Bölge (Verildiyse)]
+
+## 🔎 1. Bitki Türü Tespiti
+* **Bitki Adı:** [Bitkinin yaygın adı]
+* **Bilimsel Adı:** *[Latince adı]*
+* **Bitki Tipi:** [Tarım Bitkisi / Ev-Süs Bitkisi]
+* **Olası Benzer Türler:** [Karıştırılabileceği 1-2 tür]
+
+## 🦠 2. Hastalık / Zararlı Tespiti
+* **Durum:** [Hastalık adı / Zararlı adı / 'Sağlıklı']
+* **Belirtiler:** [Görülen semptomlar]
+* **Nedenler:** [Olası sebepler (nem, sıcaklık, vb.)]
+* **Şiddet Düzeyi:** [Hafif / Orta / İleri Düzey]
+
+## 💊 3. Tedavi ve Koruma Önerileri
+* **Kimyasal Mücadele:** [Etken madde veya ticari ilaç ismi.]
+* **Uygulama:** [Nasıl ve ne zaman uygulanmalı?]
+* **Doğal Yöntemler:** [Ev yapımı veya organik çözümler.]
+* **Yardımcı YouTube Videoları:**
+    <!-- MODEL ZORUNLU: Google Arama'yı kullanarak 1-2 adet YARDIMCI VİDEO bul. -->
+    * *<a href="YouTube Linki" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube text-red-600 mr-1"></i> [Video Başlığı]</a>* - Video içeriğinin kısa bir özeti.
+    * *(Video bulunamazsa bu satırı silin)*
+
+---
+
+## 🗓️ 4. Hava Durumuna Bağlı 5 Günlük Bakım Planı
+*(Bu bölümü SADECE konum ve hava durumu verisi sağlandıysa doldur. Sağlanmadıysa "Konum verisi alınamadığı için hava durumuna dayalı plan oluşturulamadı." yaz.)*
+
+* **Gün 1 ([Hava Durumu Özeti]):** [O gün için spesifik öneri. Örn: "Bugün hava açık, sulama için uygun."]
+* **Gün 2 ([Hava Durumu Özeti]):** [Örn: "Şiddetli yağmur bekleniyor, gübreleme yapmayın, ilaçlamayı erteleyin."]
+* **Gün 3 ([Hava Durumu Özeti]):** [Örn: "Rüzgarlı, ilaçlama yapmaktan kaçının."]
+* **Gün 4 ([Hava Durumu Özeti]):** [...]
+* **Gün 5 ([Hava Durumu Özeti]):** [...]
+
+---
+<!-- MODEL: Eğer Bitki Tipi "Tarım Bitkisi" (Buğday, Mısır, Pamuk vb.) ise AŞAĞIDAKİ BÖLÜMLERİ KULLAN. -->
+
+## 🌾 5. Gübreleme Planı (Tarım Bitkisi)
+* **Taban Gübresi:** [Gübre tipi, miktar, zaman.]
+* **Üst Gübreleme:** [Gübre tipi, miktar, zaman.]
+* **Yardımcı YouTube Videoları:**
+    * *<a href="YouTube Linki" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube text-red-600 mr-1"></i> [Video Başlığı]</a>*
+
+### 📊 Yıllık Gübreleme İhtiyaç Grafiği
+<!-- MODEL: 12 aylık gübreleme ihtiyacını Düşük/Orta/Yüksek olarak görselleştir. Renkler: bg-green-300, bg-green-500, bg-green-700, bg-green-900. -->
+<div class="bar-chart-container">
+    <!-- Örnek (Dinamik olarak değiştir): -->
+    <div class="bar-chart-month"> <div class="bar bg-green-300" style="height: 20%;"></div>Oca</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-300" style="height: 20%;"></div>Şub</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-500" style="height: 50%;"></div>Mar</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-700" style="height: 80%;"></div>Nis</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-900" style="height: 100%;"></div>May</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-500" style="height: 60%;"></div>Haz</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-300" style="height: 10%;"></div>Tem</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-300" style="height: 10%;"></div>Ağu</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-500" style="height: 40%;"></div>Eyl</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-700" style="height: 70%;"></div>Eki</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-300" style="height: 20%;"></div>Kas</div>
+    <div class="bar-chart-month"> <div class="bar bg-green-300" style="height: 10%;"></div>Ara</div>
+</div>
+
+## 💧 6. Sulama Takvimi (Tarım Bitkisi)
+* **Kritik Dönemler:** [Çiçeklenme vb.]
+* **Yöntem:** [Damla / Yağmurlama]
+* **Yardımcı YouTube Videoları:**
+    * *<a href="YouTube Linki" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube text-red-600 mr-1"></i> [Video Başlığı]</a>*
+
+### 📊 Yıllık Sulama İhtiyaç Grafiği
+<!-- MODEL: 12 aylık sulama ihtiyacını görselleştir. Renkler: bg-blue-300, bg-blue-500, bg-blue-700, bg-blue-900. -->
+<div class="bar-chart-container">
+    <!-- Örnek (Dinamik olarak değiştir): -->
+    <div class="bar-chart-month"> <div class="bar bg-blue-300" style="height: 10%;"></div>Oca</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-300" style="height: 10%;"></div>Şub</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-300" style="height: 20%;"></div>Mar</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-500" style="height: 40%;"></div>Nis</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-700" style="height: 70%;"></div>May</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-900" style="height: 100%;"></div>Haz</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-900" style="height: 100%;"></div>Tem</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-700" style="height: 80%;"></div>Ağu</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-500" style="height: 50%;"></div>Eyl</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-300" style="height: 20%;"></div>Eki</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-300" style="height: 10%;"></div>Kas</div>
+    <div class="bar-chart-month"> <div class="bar bg-blue-300" style="height: 10%;"></div>Ara</div>
+</div>
+
+---
+<!-- MODEL: Eğer Bitki Tipi "Ev-Süs Bitkisi" ise AŞAĞIDAKİ BÖLÜMLERİ KULLAN. -->
+
+## 🌿 5. Ev Bitkisi Bakım Bilgileri
+* **Işık:** [Aydınlık / Yarı gölge]
+* **Sulama:** [Sıklık]
+* **Toprak:** [Türü]
+* **Yardımcı YouTube Videoları:**
+    * *<a href="YouTube Linki" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-youtube text-red-600 mr-1"></i> [Video Başlığı]</a>*
+
+## 🐾 6. Evcil Hayvan Güvenliği
+* **Durum:** [Zehirli / Zehirsiz]
+* **Öneri:** [Uyarılar]
+`;
+
+        // --- DOM Elementleri ---
+        const imageUpload = document.getElementById('imageUpload');
+        const imagePreview = document.getElementById('imagePreview');
+        const promptInput = document.getElementById('prompt');
+        const analyzeButton = document.getElementById('analyzeButton');
+        const locationButton = document.getElementById('locationButton');
+        const locationText = document.getElementById('locationText');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorContainer = document.getElementById('errorContainer');
+        const errorMessage = document.getElementById('errorMessage');
+        const analysisResult = document.getElementById('analysisResult');
+        
+        let base64ImageData = null;
+        let weatherData = null; // Hava durumu verisini saklamak için
+
+        // --- Olay Dinleyicileri ---
+
+        // Fotoğraf yüklendiğinde önizle
+        imageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) {
+                base64ImageData = null;
+                imagePreview.classList.add('hidden');
+                return;
+            }
+            
+            // Görüntüyü base64'e çevir
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                base64ImageData = reader.result.split(',')[1]; // 'data:image/jpeg;base64,' kısmını kaldır
+                imagePreview.src = reader.result;
+                imagePreview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        // Konum al butonu
+        locationButton.addEventListener('click', () => {
+            if (WEATHER_API_KEY === "BURAYA_KENDI_API_ANAHTARINIZI_YAPISTIRIN" || WEATHER_API_KEY === "") {
+                showError("Hava durumu özelliği için geçerli bir OpenWeatherMap API anahtarı gerekli. Lütfen koddaki 'WEATHER_API_KEY' değişkenini güncelleyin.");
+                return;
+            }
+            
+            if (!navigator.geolocation) {
+                showError("Tarayıcınız konum servisini desteklemiyor.");
+                return;
+            }
+
+            locationText.textContent = "Alınıyor...";
+            locationButton.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const { latitude, longitude } = position.coords;
+                try {
+                    weatherData = await fetchWeather(latitude, longitude);
+                    locationText.textContent = `Konum: ${weatherData.city} (Hava Durumu Alındı)`;
+                    locationButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                    locationButton.classList.add('bg-green-600', 'hover:bg-green-700');
+                    locationButton.innerHTML = `<i class="fa-solid fa-check mr-2"></i> Hava Durumu Alındı`;
+                } catch (error) {
+                    showError(`Hava durumu alınamadı: ${error.message}`);
+                    locationText.textContent = "Konum Alınamadı";
+                } finally {
+                    locationButton.disabled = false;
+                }
+            }, (error) => {
+                showError("Konum izni reddedildi veya konum alınamadı.");
+                locationText.textContent = "Hava Durumu için Konum Al";
+                locationButton.disabled = false;
+            });
+        });
+
+        // Analiz et butonu
+        analyzeButton.addEventListener('click', runAnalysis);
+
+        // --- Ana Fonksiyonlar ---
+        
+        // OpenWeatherMap API'den 5 günlük hava durumu tahmini çeker
+        async function fetchWeather(lat, lon) {
+            const weatherApiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=tr`;
+            
+            const response = await fetch(weatherApiUrl);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Hava durumu sunucusuna bağlanılamadı.");
+            }
+            
+            const data = await response.json();
+            
+            // API'den gelen veriyi basitleştir
+            const forecastSummary = data.list.slice(0, 16).map(item => { // Yaklaşık 48 saatlik (16*3 saat)
+                return `${item.dt_txt.split(' ')[1].substring(0, 5)}: ${item.weather[0].description}, ${Math.round(item.main.temp)}°C, Yağış: ${item.pop * 100}%`;
+            }).join('\n');
+            
+            return {
+                city: data.city.name,
+                forecast: `Konum: ${data.city.name}\n5 Günlük Tahmin (3 saatlik aralıklarla):\n${forecastSummary}`
+            };
+        }
+
+        // --- GÜNCELLENMİŞ runAnalysis Fonksiyonu (Backend Entegrasyonu) ---
+        async function runAnalysis() {
+            const userPrompt = promptInput.value;
+            
+            if (!userPrompt && !base64ImageData) {
+                showError("Lütfen bir fotoğraf yükleyin veya bir açıklama girin.");
+                return;
+            }
+
+            showLoading(true);
+            showError(null);
+            analysisResult.innerHTML = "";
+
+            // Prompt hazırlığı
+            let fullPrompt = systemPrompt;
+            if(userPrompt) fullPrompt += "\n\nKULLANICI SORUSU:\n" + userPrompt;
+            if (weatherData) fullPrompt += "\n\nKONUM VE HAVA DURUMU VERİSİ:\n" + weatherData.forecast;
+
+            // Backend'e gönderilecek veri paketi
+            const payload = {
+                prompt: fullPrompt,
+                image: base64ImageData, // Sadece base64 string (data:image... kısmı olmadan)
+                mimeType: "image/jpeg"
+            };
+
+            try {
+                // DİKKAT: Artık Google URL'ine değil, kendi API'mize istek atıyoruz.
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Sunucu hatası: " + response.status);
+                }
+
+                // Backend'den gelen cevap yapısı: { result: "Markdown metni..." }
+                const text = data.result;
+
+                if (text) {
+                    if (typeof marked === 'undefined') {
+                        throw new Error("Markdown kütüphanesi (marked.js) yüklenemedi.");
+                    }
+                    analysisResult.innerHTML = marked.parse(text);
+                } else {
+                    throw new Error("API'den beklenen formatta bir cevap alınamadı.");
+                }
+
+            } catch (error) {
+                console.error("API Hatası:", error);
+                // Canvas ortamında olduğumuzu belirten özel bir hata mesajı
+                if (error.message.includes("404") || error.message.includes("Unexpected token")) {
+                    showError("Hata: Backend API bulunamadı. Bu kod Vercel'e deploy edildiğinde çalışacaktır. Canvas önizlemesinde '/api/analyze' adresi mevcut değildir.");
+                } else {
+                    showError(`Analiz yapılırken bir sorun oluştu: ${error.message}`);
+                }
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // --- Yardımcı Fonksiyonlar ---
+        
+        // Yükleme göstergesini aç/kapat
+        function showLoading(isLoading) {
+            if (isLoading) {
+                loadingIndicator.classList.remove('hidden');
+                loadingIndicator.classList.add('flex');
+                analyzeButton.disabled = true;
+                analyzeButton.classList.add('opacity-50', 'cursor-not-allowed');
+                // Önceki sonuçları temizle
+                if (analysisResult.querySelector('.fa-file-medical')) {
+                    // İlk açılış mesajı varsa dokunma
+                } else {
+                     analysisResult.innerHTML = '';
+                }
+            } else {
+                loadingIndicator.classList.add('hidden');
+                loadingIndicator.classList.remove('flex');
+                analyzeButton.disabled = false;
+                analyzeButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        // Hata mesajını göster
+        function showError(message) {
+            if (message) {
+                errorMessage.textContent = message;
+                errorContainer.classList.remove('hidden');
+            } else {
+                errorContainer.classList.add('hidden');
+            }
+        }
+
+    </script>
+
+</body>
+</html>
