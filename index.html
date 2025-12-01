@@ -3,146 +3,193 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Botanik Asistanı</title>
+    <title>AgroZeka - Akıllı Tarım Asistanı</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Poppins', sans-serif; }
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
         
-        /* Arka Plan Deseni */
-        .botanic-bg {
-            background-color: #f0fdf4; /* Very light green */
-            background-image: radial-gradient(#dcfce7 1px, transparent 1px);
-            background-size: 24px 24px;
-        }
+        /* Modern Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Özel Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #86efac; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4ade80; }
-
-        /* Yükleme Animasyonu (Logo İçin) */
-        @keyframes leaf-spin {
-            0% { transform: rotate(0deg) scale(1); filter: hue-rotate(0deg); }
-            50% { transform: rotate(180deg) scale(1.2); filter: hue-rotate(90deg); }
-            100% { transform: rotate(360deg) scale(1); filter: hue-rotate(0deg); }
+        /* Yaprak Yükleme Animasyonu */
+        @keyframes leaf-bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-5px) rotate(-10deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-3px) rotate(10deg); }
         }
         .animate-leaf-loading {
-            animation: leaf-spin 1.5s infinite ease-in-out;
-            color: #4ade80 !important; /* Yüklenirken açık yeşil olsun */
+            animation: leaf-bounce 1s infinite ease-in-out;
+            color: #16a34a !important; 
         }
 
-        /* Kart Giriş Animasyonu */
-        @keyframes slide-up {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Sonuç Alanı Stilleri (Akış Tasarımı) */
+        .agro-section {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
         }
-        .result-card {
-            animation: slide-up 0.6s ease-out forwards;
+        .agro-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .agro-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Video Linkleri İçin Özel Stil */
+        .video-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: #eff6ff; /* Açık Mavi */
+            border: 1px solid #dbeafe;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            margin-bottom: 0.75rem;
+        }
+        .video-link:hover {
+            background-color: #dbeafe;
+            transform: translateX(4px);
+        }
+        .play-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
     </style>
 </head>
 
-<body class="botanic-bg min-h-screen text-gray-800">
+<body class="text-gray-800">
 
-    <nav class="bg-white/80 backdrop-blur-md border-b border-green-100 sticky top-0 z-50">
-        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3 group cursor-default">
-                <div id="appLogoWrapper" class="bg-green-100 p-2 rounded-full transition-all duration-300">
-                    <i id="appLogo" class="fa-solid fa-leaf text-2xl text-green-600 transition-all"></i>
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div id="logoContainer" class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center transition-all duration-300">
+                    <i id="logoIcon" class="fa-solid fa-wheat-awn text-green-600 text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-green-800 tracking-wide">BOTANİK<span class="text-green-500">AI</span></h1>
-                    <p id="statusText" class="text-[10px] text-gray-500 font-medium tracking-wider uppercase">Bitki Analiz Uzmanı</p>
+                    <h1 class="font-bold text-lg text-gray-900 tracking-tight leading-tight">AgroZeka</h1>
+                    <p class="text-[10px] font-semibold text-green-600 uppercase tracking-wide">Akıllı Tarım Asistanı</p>
                 </div>
             </div>
-            <a href="https://github.com/TuncayKayalar" target="_blank" class="text-gray-400 hover:text-green-600 transition">
-                <i class="fa-brands fa-github text-2xl"></i>
+            
+            <a href="https://github.com/TuncayKayalar" target="_blank" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fa-brands fa-github text-xl"></i>
             </a>
         </div>
-    </nav>
+    </header>
 
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            <div class="md:col-span-4 space-y-5">
+            <div class="lg:col-span-4 lg:sticky lg:top-24 space-y-6">
                 
-                <div class="bg-white rounded-3xl shadow-lg shadow-green-100/50 border border-green-50 overflow-hidden">
-                    <div class="p-1 bg-gradient-to-r from-green-400 to-emerald-500"></div> <div class="p-5">
-                        <label class="block w-full aspect-square relative cursor-pointer group rounded-2xl border-2 border-dashed border-green-200 bg-green-50/30 hover:bg-green-50 hover:border-green-400 transition-all duration-300 overflow-hidden">
-                            <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
-                                <div class="bg-white p-4 rounded-full shadow-sm mb-3 group-hover:scale-110 transition duration-300">
-                                    <i class="fa-solid fa-camera-retro text-3xl text-green-500"></i>
-                                </div>
-                                <p class="text-sm font-semibold text-gray-600">Fotoğraf Ekle</p>
-                                <p class="text-xs text-gray-400 mt-1">Bitkinin net bir karesi</p>
+                <div class="mb-2">
+                    <h2 class="text-2xl font-bold text-gray-900">Tarlanızın Durumu?</h2>
+                    <p class="text-gray-500 mt-1">Fotoğraf yükleyin, hastalığı tespit edelim ve en güncel tedavi videolarını sunalım.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-2 shadow-sm border border-gray-200">
+                    <label class="block relative w-full aspect-[4/3] cursor-pointer rounded-xl overflow-hidden bg-gray-50 border-2 border-dashed border-gray-300 hover:border-green-500 hover:bg-green-50/30 transition-all group">
+                        <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                            <div class="w-16 h-16 bg-white rounded-full shadow-sm flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-camera text-2xl text-gray-400 group-hover:text-green-500 transition"></i>
                             </div>
-                            <img id="imagePreview" class="hidden w-full h-full object-cover transition duration-500 group-hover:scale-105" />
-                            <input id="imageUpload" type="file" class="hidden" accept="image/*" />
-                        </label>
-
-                        <button id="removeImageBtn" class="hidden w-full mt-3 text-xs text-red-500 hover:bg-red-50 py-2 rounded-lg transition">
-                            <i class="fa-solid fa-trash mr-1"></i> Fotoğrafı Sil
+                            <span class="font-semibold text-gray-700">Fotoğraf Yükle</span>
+                            <span class="text-xs text-gray-400 mt-1">Bitkinin yakından çekilmiş net fotoğrafı</span>
+                        </div>
+                        
+                        <img id="imagePreview" class="hidden w-full h-full object-cover" />
+                        <input id="imageUpload" type="file" class="hidden" accept="image/*" />
+                        
+                        <button id="removeImageBtn" class="hidden absolute top-2 right-2 bg-white/90 text-red-500 p-2 rounded-lg shadow-sm hover:text-red-700 z-10">
+                            <i class="fa-solid fa-trash"></i>
                         </button>
-                    </div>
+                    </label>
                 </div>
 
-                <div class="bg-white rounded-3xl shadow-lg shadow-green-100/50 border border-green-50 p-5 relative">
-                    <label class="text-xs font-bold text-green-800 uppercase tracking-wide mb-2 block">Şikayet / Gözlem</label>
-                    <textarea id="prompt" rows="3" class="w-full bg-gray-50 border-0 rounded-xl p-3 text-sm focus:ring-2 focus:ring-green-400 transition resize-none placeholder-gray-400" placeholder="Örn: Yapraklarda sararma başladı..."></textarea>
-                    <div class="absolute -right-2 -top-2 bg-yellow-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm transform rotate-12">Opsiyonel</div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Ekstra Bilgi (Opsiyonel)</label>
+                    <textarea id="prompt" rows="3" class="w-full bg-white border border-gray-200 rounded-xl p-4 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition resize-none shadow-sm" placeholder="Örn: Buğdaylarda sararma var, pas hastalığı olabilir mi?"></textarea>
                 </div>
 
-                <button id="analyzeButton" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white text-lg font-bold py-4 rounded-2xl shadow-xl shadow-green-200 transform transition hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3 group">
-                    <span>Analiz Et</span>
-                    <i class="fa-solid fa-wand-magic-sparkles group-hover:rotate-12 transition"></i>
+                <button id="analyzeButton" class="w-full bg-gray-900 hover:bg-black text-white font-medium text-lg py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3">
+                    <span>Analizi Başlat</span>
+                    <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
 
-            <div class="md:col-span-8">
+
+            <div class="lg:col-span-8">
                 
-                <div id="welcomeState" class="h-full flex flex-col items-center justify-center text-center p-10 bg-white/60 backdrop-blur-sm rounded-3xl border border-white shadow-sm min-h-[400px]">
-                    <div class="relative">
-                        <div class="absolute -inset-4 bg-green-200 rounded-full opacity-20 blur-xl animate-pulse"></div>
-                        <i class="fa-solid fa-seedling text-6xl text-green-600 relative z-10"></i>
+                <div id="emptyState" class="bg-white rounded-3xl border border-dashed border-gray-300 p-12 text-center h-[500px] flex flex-col items-center justify-center">
+                    <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+                        <i class="fa-solid fa-chart-pie text-3xl text-gray-300"></i>
                     </div>
-                    <h2 class="text-2xl font-bold text-gray-800 mt-6">Bahçenize Hoş Geldiniz</h2>
-                    <p class="text-gray-500 mt-2 max-w-sm">Yapay zeka asistanınız bitkilerinizi tanımaya hazır. Soldaki panelden bir fotoğraf yükleyerek başlayın.</p>
+                    <h3 class="text-xl font-bold text-gray-900">Henüz Bir Analiz Yok</h3>
+                    <p class="text-gray-500 max-w-sm mt-2">Sol taraftan bir bitki fotoğrafı yükleyip "Analizi Başlat" butonuna bastığınızda detaylı rapor burada görünecektir.</p>
                 </div>
 
-                <div id="loadingState" class="hidden h-full flex flex-col items-center justify-center text-center p-10 min-h-[400px]">
-                    <div class="loader-botanic mb-6 relative">
-                        <div class="w-16 h-16 border-4 border-green-100 border-t-green-500 rounded-full animate-spin"></div>
-                        <i class="fa-solid fa-leaf absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-600 text-xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-green-900">Bitki İnceleniyor...</h3>
-                    <p class="text-gray-500 mt-2">Köklerden yapraklara detaylı tarama yapılıyor.</p>
-                </div>
-
-                <div id="errorState" class="hidden bg-red-50 border-l-4 border-red-500 p-6 rounded-r-xl mb-6 shadow-sm">
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-triangle-exclamation text-red-500 text-xl"></i>
-                        <div>
-                            <h3 class="font-bold text-red-800">Bağlantı Hatası</h3>
-                            <p id="errorMessage" class="text-sm text-red-600">Sunucu yanıt vermedi.</p>
+                <div id="loadingState" class="hidden bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-12 text-center h-[500px] flex flex-col items-center justify-center relative overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-50"></div>
+                    
+                    <div class="relative z-10">
+                        <div class="w-24 h-24 bg-white rounded-full shadow-lg flex items-center justify-center mb-8 mx-auto relative">
+                            <div class="absolute inset-0 border-4 border-green-100 rounded-full animate-pulse"></div>
+                            <div class="absolute inset-0 border-t-4 border-green-500 rounded-full animate-spin"></div>
+                            <i class="fa-solid fa-leaf text-3xl text-green-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">Analiz Yapılıyor</h3>
+                        <p class="text-gray-500">Görüntü işleniyor, hastalıklar taranıyor...</p>
+                        <div class="mt-8 flex justify-center gap-2">
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-bounce"></span>
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                            <span class="w-2 h-2 bg-green-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
                         </div>
                     </div>
                 </div>
 
-                <div id="resultContainer" class="hidden space-y-6">
+                <div id="errorState" class="hidden bg-red-50 rounded-2xl p-6 border border-red-100">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-red-100 p-2 rounded-lg">
+                            <i class="fa-solid fa-bug text-red-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-red-900">Bir Hata Oluştu</h3>
+                            <p id="errorMessage" class="text-red-700 text-sm mt-1">Sunucu yanıt vermedi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="resultContainer" class="hidden bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-8 md:p-10 border border-gray-100">
                     </div>
 
             </div>
+
         </div>
-
-        <footer class="mt-12 text-center text-green-800/40 text-sm font-medium">
-            <p><i class="fa-solid fa-leaf mr-1"></i> Bitki Analiz Uzmanı - Yapay Zeka Destekli</p>
-        </footer>
-
     </div>
 
     <script>
@@ -153,14 +200,10 @@
         const removeImageBtn = document.getElementById('removeImageBtn');
         const promptInput = document.getElementById('prompt');
         const analyzeButton = document.getElementById('analyzeButton');
-        
-        // Logo ve Durum Metni (Animasyon İçin)
-        const appLogo = document.getElementById('appLogo');
-        const appLogoWrapper = document.getElementById('appLogoWrapper');
-        const statusText = document.getElementById('statusText');
-        
-        // State Konteynerleri
-        const welcomeState = document.getElementById('welcomeState');
+        const logoIcon = document.getElementById('logoIcon');
+        const logoContainer = document.getElementById('logoContainer');
+
+        const emptyState = document.getElementById('emptyState');
         const loadingState = document.getElementById('loadingState');
         const errorState = document.getElementById('errorState');
         const resultContainer = document.getElementById('resultContainer');
@@ -179,10 +222,6 @@
                     imagePreview.classList.remove('hidden');
                     uploadPlaceholder.classList.add('hidden');
                     removeImageBtn.classList.remove('hidden');
-                    
-                    // Kartın etrafını yeşil yapalım yüklendiğini belli etmek için
-                    imagePreview.parentElement.classList.add('border-green-500', 'bg-green-50');
-                    imagePreview.parentElement.classList.remove('border-dashed', 'border-green-200');
                 };
                 reader.readAsDataURL(file);
             }
@@ -197,90 +236,102 @@
             imagePreview.src = '';
             uploadPlaceholder.classList.remove('hidden');
             removeImageBtn.classList.add('hidden');
-            
-            imagePreview.parentElement.classList.remove('border-green-500', 'bg-green-50');
-            imagePreview.parentElement.classList.add('border-dashed', 'border-green-200');
         });
 
-        // SYSTEM PROMPT: Yapay Zeka'ya HTML üretmesini söylüyoruz
+        // SYSTEM PROMPT (Modern Akış Tasarımı İçin HTML)
         const systemPrompt = `
-        Sen profesyonel bir Botanik Uzmanısın. Kullanıcının gönderdiği bitkiyi analiz et.
-        
+        Sen profesyonel bir Ziraat Mühendisi ve "AgroZeka" adlı yapay zekasın.
+        Kullanıcının gönderdiği tarımsal bitkiyi analiz et.
+
+        ÖNEMLİ: "google_search" aracını kullanarak ŞU ANKİ, ÇALIŞAN, EN POPÜLER ve EN YENİ YouTube videolarını bulman ŞARTTIR.
+        Asla kırık veya uydurma link verme.
+
         ÇIKTI FORMATI:
-        Cevabını Markdown OLARAK DEĞİL, doğrudan aşağıdaki HTML yapısını kullanarak ver. 
-        Her bir bölümü ayrı bir "div" kartı olarak oluştur.
-        
-        Kullanacağın HTML Şablonu (Sadece içerikleri değiştir, class'ları koru):
+        Cevabını doğrudan aşağıdaki HTML yapısını kullanarak ver.
+        Kart (box) tasarımı kullanma. Akışkan, temiz bir rapor oluştur.
 
-        <div class="result-card bg-white rounded-3xl p-6 shadow-md border-l-8 border-green-500 mb-6 relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-green-100 text-green-700 px-4 py-1 rounded-bl-xl text-xs font-bold">TANI</div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-magnifying-glass text-green-600"></i> [BİTKİ ADI]
-            </h2>
-            <p class="text-sm text-green-600 font-medium mb-4 italic">[BİLİMSEL ADI]</p>
-            <div class="bg-green-50 rounded-xl p-4">
-                <p class="text-gray-700 leading-relaxed">[BİTKİNİN DURUMU VE TESPİT EDİLEN SORUN HAKKINDA DETAYLI AÇIKLAMA]</p>
+        --- HTML ŞABLONU ---
+
+        <div class="agro-section">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold uppercase rounded-full tracking-wider">Teşhis Raporu</span>
+                <span class="text-gray-400 text-sm">|</span>
+                <span class="text-gray-500 text-sm font-medium">[TARİH]</span>
+            </div>
+            
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">[BİTKİ ADI]</h2>
+            <p class="text-lg text-gray-600 mb-6 font-medium">[TESPİT EDİLEN SORUN/HASTALIK ADI]</p>
+            
+            <div class="bg-gray-50 p-6 rounded-2xl border-l-4 border-green-500">
+                <p class="text-gray-700 leading-relaxed text-base">
+                    [SORUNUN NEDENLERİ VE BELİRTİLERİ HAKKINDA DETAYLI, PROFESYONEL AÇIKLAMA. Çiftçiye konuşur gibi net ol.]
+                </p>
             </div>
         </div>
 
-        <div class="result-card bg-white rounded-3xl p-6 shadow-md border-l-8 border-orange-400 mb-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-user-doctor text-orange-500"></i> Tedavi Reçetesi
-            </h2>
-            <ul class="space-y-3">
-                <li class="flex items-start gap-3">
-                    <span class="bg-orange-100 text-orange-600 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
-                    <span class="text-gray-700">[TEDAVİ ADIMI 1]</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="bg-orange-100 text-orange-600 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
-                    <span class="text-gray-700">[TEDAVİ ADIMI 2]</span>
-                </li>
-            </ul>
-        </div>
-
-        <div class="result-card bg-white rounded-3xl p-6 shadow-md border-l-8 border-blue-400 mb-6">
-             <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-droplet text-blue-500"></i> Bakım Takvimi
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-blue-50 p-4 rounded-xl">
-                    <h4 class="font-bold text-blue-800 text-sm mb-1"><i class="fa-regular fa-sun mr-1"></i> Işık</h4>
-                    <p class="text-sm text-blue-900">[IŞIK İHTİYACI]</p>
+        <div class="agro-section">
+            <h3 class="agro-title"><i class="fa-solid fa-clipboard-check text-green-600"></i> Tedavi ve Mücadele</h3>
+            
+            <div class="space-y-4">
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center font-bold">1</div>
+                    <div>
+                        <h4 class="font-bold text-gray-900">Kültürel Önlemler</h4>
+                        <p class="text-gray-600 text-sm mt-1">[Örn: Sulamayı azaltın, hastalıklı yaprakları budayın]</p>
+                    </div>
                 </div>
-                <div class="bg-blue-50 p-4 rounded-xl">
-                    <h4 class="font-bold text-blue-800 text-sm mb-1"><i class="fa-solid fa-faucet-drip mr-1"></i> Sulama</h4>
-                    <p class="text-sm text-blue-900">[SULAMA SIKLIĞI]</p>
-                </div>
-                <div class="bg-blue-50 p-4 rounded-xl col-span-1 md:col-span-2">
-                    <h4 class="font-bold text-blue-800 text-sm mb-1"><i class="fa-solid fa-bottle-droplet mr-1"></i> Gübreleme</h4>
-                    <p class="text-sm text-blue-900">[GÜBRELEME ÖNERİSİ]</p>
+                
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center font-bold">2</div>
+                    <div>
+                        <h4 class="font-bold text-gray-900">Kimyasal/Organik Mücadele</h4>
+                        <p class="text-gray-600 text-sm mt-1">[Örn: Bakırlı ilaç uygulaması veya Neem yağı. Etken madde öner.]</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="result-card bg-white rounded-3xl p-6 shadow-md border-l-8 border-indigo-500">
-             <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <i class="fa-brands fa-youtube text-red-500"></i> Faydalı Videolar
-            </h2>
-            <div class="space-y-3">
-                <a href="[VIDEO_LINKI]" target="_blank" class="block bg-blue-50 hover:bg-blue-100 border border-blue-100 p-4 rounded-xl transition group">
-                    <h4 class="text-blue-600 font-bold group-hover:underline flex items-center gap-2">
-                        <i class="fa-solid fa-play text-xs"></i> [VIDEO BAŞLIĞI]
-                    </h4>
-                    <p class="text-xs text-blue-400 mt-1">Youtube'da izle</p>
-                </a>
-                <a href="[VIDEO_LINKI_2]" target="_blank" class="block bg-blue-50 hover:bg-blue-100 border border-blue-100 p-4 rounded-xl transition group">
-                    <h4 class="text-blue-600 font-bold group-hover:underline flex items-center gap-2">
-                        <i class="fa-solid fa-play text-xs"></i> [VIDEO BAŞLIĞI 2]
-                    </h4>
-                    <p class="text-xs text-blue-400 mt-1">Youtube'da izle</p>
-                </a>
+        <div class="agro-section">
+            <h3 class="agro-title"><i class="fa-solid fa-seedling text-green-600"></i> Bakım Gereksinimleri</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white border border-gray-200 p-4 rounded-xl">
+                    <div class="text-gray-400 text-xs font-bold uppercase mb-1">Sulama</div>
+                    <div class="font-semibold text-gray-800">[SULAMA SIKLIĞI]</div>
+                </div>
+                <div class="bg-white border border-gray-200 p-4 rounded-xl">
+                    <div class="text-gray-400 text-xs font-bold uppercase mb-1">Gübreleme</div>
+                    <div class="font-semibold text-gray-800">[GÜBRE ÖNERİSİ]</div>
+                </div>
+                 <div class="bg-white border border-gray-200 p-4 rounded-xl">
+                    <div class="text-gray-400 text-xs font-bold uppercase mb-1">Ortam</div>
+                    <div class="font-semibold text-gray-800">[SICAKLIK/IŞIK]</div>
+                </div>
             </div>
+        </div>
+
+        <div class="agro-section">
+            <h3 class="agro-title"><i class="fa-brands fa-youtube text-red-600"></i> Uzman Videoları</h3>
+            <p class="text-sm text-gray-500 mb-4">Bu sorunla ilgili seçilmiş en iyi videolar:</p>
+            
+            <a href="[VIDEO_LINKI_1]" target="_blank" class="video-link">
+                <div class="play-icon"><i class="fa-solid fa-play"></i></div>
+                <div>
+                    <h4 class="font-bold text-blue-900 text-sm line-clamp-1">[VIDEO BAŞLIĞI 1]</h4>
+                    <p class="text-xs text-blue-600 mt-1">YouTube'da İzle</p>
+                </div>
+            </a>
+
+            <a href="[VIDEO_LINKI_2]" target="_blank" class="video-link">
+                <div class="play-icon"><i class="fa-solid fa-play"></i></div>
+                <div>
+                    <h4 class="font-bold text-blue-900 text-sm line-clamp-1">[VIDEO BAŞLIĞI 2]</h4>
+                    <p class="text-xs text-blue-600 mt-1">YouTube'da İzle</p>
+                </div>
+            </a>
         </div>
         `;
 
-        // Analiz Butonu Tıklama
+        // Analiz Butonu
         analyzeButton.addEventListener('click', async () => {
             const userText = promptInput.value;
 
@@ -289,28 +340,25 @@
                 return;
             }
 
-            // 1. ANİMASYONU BAŞLAT (Yaprak Dönsün)
-            appLogo.classList.add('animate-leaf-loading'); // Yaprağa dönme efekti ekle
-            appLogoWrapper.classList.add('scale-110', 'bg-green-200'); // Logoyu biraz büyüt
-            statusText.textContent = "Analiz Yapılıyor...";
-            statusText.classList.add('text-green-600', 'animate-pulse');
+            // Animasyon Başlat
+            logoIcon.classList.remove('fa-wheat-awn');
+            logoIcon.classList.add('fa-leaf', 'animate-leaf-loading');
+            logoContainer.classList.add('scale-110');
+            analyzeButton.disabled = true;
+            analyzeButton.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> İşleniyor...';
 
-            // 2. ARAYÜZÜ HAZIRLA
-            welcomeState.classList.add('hidden');
-            resultContainer.innerHTML = ''; // Eski sonuçları temizle
+            // UI Hazırla
+            emptyState.classList.add('hidden');
             resultContainer.classList.add('hidden');
             errorState.classList.add('hidden');
-            loadingState.classList.remove('hidden'); // Ortadaki loader'ı da göster
-            
-            analyzeButton.disabled = true;
-            analyzeButton.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Zeka Çalışıyor...';
+            loadingState.classList.remove('hidden');
 
             try {
                 // Prompt Hazırlığı
                 let fullPrompt = systemPrompt;
                 if(userText) fullPrompt += "\n\nKullanıcı Notu: " + userText;
 
-                // Backend İsteği
+                // BACKEND İSTEĞİ
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -327,33 +375,29 @@
                     throw new Error(data.error || "Sunucu hatası.");
                 }
 
-                // 3. SONUCU GÖSTER
-                // Yapay zeka bize doğrudan HTML gönderdiği için marked.parse kullanmıyoruz.
-                // Gelen veriyi direkt basıyoruz.
+                // Sonucu Göster
                 resultContainer.innerHTML = data.result;
-                
                 loadingState.classList.add('hidden');
                 resultContainer.classList.remove('hidden');
 
-                // Mobil için kaydır
-                resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Kaydır (Mobil uyumlu)
+                if(window.innerWidth < 1024) {
+                    resultContainer.scrollIntoView({ behavior: 'smooth' });
+                }
 
             } catch (error) {
                 console.error(error);
                 loadingState.classList.add('hidden');
                 errorState.classList.remove('hidden');
-                errorMessage.textContent = "Hata: Backend API'ye ulaşılamadı. (Vercel üzerinde olduğunuza emin olun)";
+                errorMessage.textContent = "Hata: Backend API'ye ulaşılamadı. (Vercel üzerinde olduğunuzdan emin olun)";
             } finally {
-                // 4. ANİMASYONU DURDUR
-                setTimeout(() => {
-                    appLogo.classList.remove('animate-leaf-loading');
-                    appLogoWrapper.classList.remove('scale-110', 'bg-green-200');
-                    statusText.textContent = "Bitki Analiz Uzmanı";
-                    statusText.classList.remove('text-green-600', 'animate-pulse');
-                    
-                    analyzeButton.disabled = false;
-                    analyzeButton.innerHTML = '<span>Analiz Et</span><i class="fa-solid fa-wand-magic-sparkles"></i>';
-                }, 500);
+                // Animasyon Durdur
+                logoIcon.classList.add('fa-wheat-awn');
+                logoIcon.classList.remove('fa-leaf', 'animate-leaf-loading');
+                logoContainer.classList.remove('scale-110');
+                
+                analyzeButton.disabled = false;
+                analyzeButton.innerHTML = '<span>Analizi Başlat</span><i class="fa-solid fa-arrow-right"></i>';
             }
         });
     </script>
