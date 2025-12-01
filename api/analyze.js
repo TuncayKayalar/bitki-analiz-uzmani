@@ -1,7 +1,5 @@
-// api/analyze.js
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// Vercel sunucu fonksiyonu
 module.exports = async (req, res) => {
   // Sadece POST isteklerine izin ver
   if (req.method !== 'POST') {
@@ -9,17 +7,22 @@ module.exports = async (req, res) => {
   }
 
   try {
-    // 1. Gelen veriyi al (Metin ve Resim)
     const { prompt, image, mimeType } = req.body;
-
-    // 2. Google API Anahtarını güvenli ortamdan çek
-    // (Bu anahtarı kodun içine YAZMIYORUZ, Vercel panelinden ekleyeceğiz)
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const apiKey = process.env.GEMINI_API_KEY;
     
-    // Modeli seç
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    if (!apiKey) {
+      throw new Error("API Anahtarı bulunamadı.");
+    }
 
-    // 3. Google'a gönderilecek paketi hazırla
+    const genAI = new GoogleGenerativeAI(apiKey);
+    
+    // ÖNEMLİ DEĞİŞİKLİK: 'googleSearch' aracı burada aktif ediliyor.
+    // Artık model internete bağlanıp gerçek videoları bulabilecek.
+    const model = genAI.getGenerativeModel({ 
+        model: "gemini-2.5-flash",
+        tools: [{ googleSearch: {} }] 
+    });
+
     let parts = [{ text: prompt }];
 
     if (image) {
@@ -31,21 +34,18 @@ module.exports = async (req, res) => {
       });
     }
 
-    // 4. Analizi Başlat
     const result = await model.generateContent({
-      contents: [{ role: "user", parts: parts }],
-      // Sistem talimatını frontend'den de gönderebilirsiniz veya buraya gömebilirsiniz.
-      // Şimdilik basit tutuyoruz, frontend prompt'u her şeyi içerecek.
+      contents: [{ role: "user", parts: parts }]
     });
 
     const response = await result.response;
     const text = response.text();
 
-    // 5. Sonucu Frontend'e (Senin HTML sayfana) geri gönder
+    // 5. Sonucu Frontend'e gönder
     res.status(200).json({ result: text });
 
   } catch (error) {
     console.error("API Hatası:", error);
-    res.status(500).json({ error: error.message || "Sunucu tarafında bir hata oluştu." });
+    res.status(500).json({ error: error.message || "Sunucu hatası oluştu." });
   }
 };
