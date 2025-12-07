@@ -19,21 +19,15 @@ module.exports = async (req, res) => {
     const apiKey = process.env.GEMINI_API_KEY;
     
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY environment variable not found");
+      throw new Error("API Anahtarı bulunamadı.");
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    // DÜZELTME BURADA:
-    // 1. Model ismini 'gemini-1.5-flash' olarak düzelttim (2.5 henüz yok).
-    // 2. 'tools: [{ googleSearch: {} }]' ekledim ki YouTube videolarını bulabilsin.
+    // DEĞİŞİKLİK: Model ismini en garantili sürüm koduyla değiştirdik.
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-1.5-flash",
-      tools: [{ googleSearch: {} }],
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 2048,
-      }
+      model: "gemini-1.5-flash-001", // En kararlı sürüm
+      // tools: [{ googleSearch: {} }] // Şimdilik search'ü kapatalım, temel analiz çalışsın.
     });
 
     let parts = [{ text: prompt }];
@@ -59,7 +53,7 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error("API Error:", error);
     res.status(500).json({ 
-      error: error.message || "Server error during analysis"
+      error: error.message || "Sunucu hatası." 
     });
   }
 };
