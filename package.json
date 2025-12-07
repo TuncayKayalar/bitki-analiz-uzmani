@@ -1,7 +1,7 @@
 {
-  "name": "bitki-analiz-uzmani",
-  "version": "1.0.0",
+  "name": "agroai-system",
+  "version": "2.0.0",
   "dependencies": {
-    "@google/generative-ai": "^0.1.0"
+    "@google/generative-ai": "^0.21.0"
   }
 }
