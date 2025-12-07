@@ -12,7 +12,7 @@
         body { font-family: 'Roboto', sans-serif; background-color: #f0f2f5; }
         h1, h2, h3, h4, .brand-font, button { font-family: 'Oswald', sans-serif; text-transform: uppercase; }
         
-        /* Keskin Hatlar (Endüstriyel Tasarım) */
+        /* Kart Tasarımı */
         .sharp-card {
             border-radius: 0px;
             background: white;
@@ -20,36 +20,20 @@
             border: 1px solid #d1d5db;
         }
 
-        /* Yükleme Animasyonu */
-        .gear-loader {
-            animation: spin-gear 3s infinite linear;
-            color: #ea580c; /* Orange-600 */
-        }
-        @keyframes spin-gear {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        /* Yükleme Dişlisi */
+        .gear-loader { animation: spin-gear 3s infinite linear; color: #ea580c; }
+        @keyframes spin-gear { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Buton Efekti */
-        .industrial-btn {
-            border-bottom: 4px solid #9a3412; /* Darker orange for 3D effect */
-            transition: all 0.1s;
-        }
-        .industrial-btn:active {
-            border-bottom: 0px solid #9a3412;
-            transform: translateY(4px);
-        }
+        .industrial-btn { border-bottom: 4px solid #9a3412; transition: all 0.1s; }
+        .industrial-btn:active { border-bottom: 0px solid #9a3412; transform: translateY(4px); }
 
-        /* Video Link Kartı */
-        .video-card {
-            background: #fff;
-            border-left: 6px solid #ea580c;
-            transition: all 0.3s ease;
-        }
-        .video-card:hover {
-            background: #fff7ed;
-            transform: translateX(5px);
-        }
+        /* Video Kartı */
+        .video-card { background: #fff; border-left: 6px solid #ea580c; transition: all 0.3s ease; }
+        .video-card:hover { background: #fff7ed; transform: translateX(5px); }
+        
+        /* Tıklanabilirlik Düzeltmesi */
+        .pointer-events-none { pointer-events: none; }
     </style>
 </head>
 
@@ -66,29 +50,19 @@
                     <p class="text-[10px] text-gray-400 tracking-[0.3em]">INTELLIGENT CROP PROTECTION</p>
                 </div>
             </div>
-            
-            <div class="hidden md:flex items-center gap-8 text-sm font-bold tracking-widest">
-                <span class="text-orange-500 border-b-2 border-orange-500 pb-1 cursor-default">ANALİZ MERKEZİ</span>
-                <a href="#" class="text-gray-500 hover:text-white transition">VERİTABANI</a>
-                <a href="https://github.com/TuncayKayalar" target="_blank" class="text-gray-500 hover:text-white transition"><i class="fa-brands fa-github text-lg"></i></a>
-            </div>
         </div>
     </header>
 
-    <div class="bg-gray-800 text-white py-16 relative overflow-hidden border-b border-gray-700">
+    <div class="bg-gray-800 text-white py-12 relative overflow-hidden border-b border-gray-700">
         <div class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center grayscale"></div>
-        
-        <div class="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-between">
-            <div>
-                <div class="inline-block bg-orange-600 text-white text-xs font-bold px-2 py-1 mb-3 skew-x-[-10deg]">V2.4 ENGINE</div>
-                <h2 class="text-4xl md:text-6xl font-bold mb-2 tracking-tight">AKILLI TESPİT SİSTEMİ</h2>
-                <p class="text-gray-400 text-lg max-w-xl font-light font-roboto">AgroAI, tarlanızdaki verimi artırmak için endüstriyel görüntü işleme teknolojisi kullanır.</p>
-            </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="inline-block bg-orange-600 text-white text-xs font-bold px-2 py-1 mb-3 skew-x-[-10deg]">V2.5 ENGINE (BETA)</div>
+            <h2 class="text-4xl md:text-5xl font-bold mb-2 tracking-tight">AKILLI TESPİT SİSTEMİ</h2>
+            <p class="text-gray-400 text-lg max-w-xl font-light font-roboto">Endüstriyel görüntü işleme teknolojisi.</p>
         </div>
     </div>
 
-    <div class="container mx-auto px-4 py-8 max-w-7xl -mt-10 relative z-20">
-        
+    <div class="container mx-auto px-4 py-8 max-w-7xl -mt-8 relative z-20">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
             <div class="lg:col-span-4 space-y-5">
@@ -98,36 +72,32 @@
                         <h3 class="text-gray-800 font-bold flex items-center gap-2 text-lg">
                             <i class="fa-solid fa-satellite-dish text-orange-600"></i> SENSÖR GİRİŞİ
                         </h3>
-                        <div class="flex gap-1">
-                            <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-                            <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
-                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        </div>
+                        <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     </div>
                     
                     <div class="p-6 bg-gray-50">
                         <label class="block relative w-full aspect-square cursor-pointer bg-white border-2 border-dashed border-gray-400 hover:border-orange-500 transition-all group shadow-inner">
-                            <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                            
+                            <div id="uploadPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 pointer-events-none">
                                 <i class="fa-solid fa-camera text-5xl text-gray-300 group-hover:text-orange-500 transition duration-300 transform group-hover:scale-110"></i>
                                 <span class="font-bold text-gray-700 mt-4 text-xl tracking-wide">FOTOĞRAF YÜKLE</span>
-                                <span class="text-xs text-gray-400 mt-2 font-roboto">Yüksek Çözünürlüklü .JPG / .PNG</span>
+                                <span class="text-xs text-gray-400 mt-2 font-roboto">Tıklayın veya sürükleyin</span>
                             </div>
                             
-                            <img id="imagePreview" class="hidden w-full h-full object-cover" />
-                            <input id="imageUpload" type="file" class="hidden" accept="image/*" />
+                            <img id="imagePreview" class="hidden w-full h-full object-cover pointer-events-none" />
                             
-                            <button id="removeImageBtn" class="hidden absolute top-0 right-0 bg-red-600 text-white px-4 py-2 text-sm font-bold hover:bg-red-700 shadow-md">
-                                <i class="fa-solid fa-trash"></i> SİL
-                            </button>
+                            <input id="imageUpload" type="file" class="hidden" accept="image/*" />
                         </label>
+                        
+                        <button id="removeImageBtn" class="hidden w-full mt-2 bg-red-600 text-white py-2 text-sm font-bold hover:bg-red-700 shadow-md">
+                            GÖRÜNTÜYÜ TEMİZLE
+                        </button>
                     </div>
                 </div>
 
                 <div class="sharp-card p-5 bg-white">
-                    <h3 class="text-gray-700 font-bold mb-2 text-sm flex items-center gap-2">
-                        <i class="fa-solid fa-pen-to-square text-gray-400"></i> EK PARAMETRELER (OPSİYONEL)
-                    </h3>
-                    <textarea id="prompt" rows="2" class="w-full bg-gray-50 border border-gray-300 p-3 text-sm focus:border-orange-500 focus:ring-0 outline-none transition font-roboto resize-none" placeholder="Örn: Yapraklarda bölgesel sararma mevcut..."></textarea>
+                    <h3 class="text-gray-700 font-bold mb-2 text-sm">EK PARAMETRELER</h3>
+                    <textarea id="prompt" rows="2" class="w-full bg-gray-50 border border-gray-300 p-3 text-sm focus:border-orange-500 focus:ring-0 outline-none resize-none" placeholder="Bitkideki belirtiler..."></textarea>
                 </div>
 
                 <button id="analyzeButton" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold text-2xl py-6 shadow-xl industrial-btn flex items-center justify-center gap-4 group">
@@ -140,18 +110,15 @@
             <div class="lg:col-span-8">
                 
                 <div id="emptyState" class="sharp-card p-12 text-center h-[600px] flex flex-col items-center justify-center bg-white border-2 border-dashed border-gray-300">
-                    <i class="fa-solid fa-microchip text-7xl text-gray-200 mb-6 animate-pulse"></i>
+                    <i class="fa-solid fa-microchip text-7xl text-gray-200 mb-6"></i>
                     <h3 class="text-3xl font-bold text-gray-800 tracking-wide">BEKLEME MODU</h3>
-                    <p class="text-gray-500 mt-3 font-light font-roboto max-w-md">Sistem aktif ve veri bekliyor. Sol panelden görüntü yükleyerek analiz motorunu başlatın.</p>
+                    <p class="text-gray-500 mt-3 font-light font-roboto">Görüntü girişi bekleniyor...</p>
                 </div>
 
-                <div id="loadingState" class="hidden sharp-card p-12 text-center h-[600px] flex flex-col items-center justify-center bg-white relative overflow-hidden">
-                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5"></div>
-                    
+                <div id="loadingState" class="hidden sharp-card p-12 text-center h-[600px] flex flex-col items-center justify-center bg-white">
                     <i class="fa-solid fa-gear text-7xl gear-loader mb-8"></i>
                     <h3 class="text-3xl font-bold text-gray-800 tracking-widest">VERİ İŞLENİYOR</h3>
-                    <p class="text-gray-500 mt-2 font-mono text-sm">GÖRÜNTÜ TARANIYOR... AI MOTORU ÇALIŞIYOR</p>
-                    
+                    <p class="text-gray-500 mt-2 font-mono text-sm">Google Search Bağlantısı Kuruluyor...</p>
                     <div class="w-64 h-2 bg-gray-200 mt-8 rounded-full overflow-hidden">
                         <div class="h-full bg-orange-600 animate-[loading_2s_ease-in-out_infinite]"></div>
                     </div>
@@ -186,6 +153,7 @@
 
         let base64ImageData = null;
 
+        // Fotoğraf Yükleme Olayı
         imageUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
@@ -196,125 +164,65 @@
                     imagePreview.classList.remove('hidden');
                     uploadPlaceholder.classList.add('hidden');
                     removeImageBtn.classList.remove('hidden');
-                    imagePreview.parentElement.classList.add('border-orange-500');
                 };
                 reader.readAsDataURL(file);
             }
         });
 
+        // Silme Olayı
         removeImageBtn.addEventListener('click', (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Label tetiklenmesini engelle
+            e.stopPropagation();
             imageUpload.value = '';
             base64ImageData = null;
             imagePreview.classList.add('hidden');
             imagePreview.src = '';
             uploadPlaceholder.classList.remove('hidden');
             removeImageBtn.classList.add('hidden');
-            imagePreview.parentElement.classList.remove('border-orange-500');
         });
 
-        // SYSTEM PROMPT
         const systemPrompt = `
         Sen "AgroAI" adında, endüstriyel tarım teknolojileri uzmanı bir yapay zekasın.
-        Kullanıcının bitkisini analiz et.
+        
+        GÖREV:
+        1. Bitkiyi analiz et.
+        2. Google Arama aracını kullanarak *gerçek* YouTube videoları bul.
+        3. Video bulamazsan "https://www.youtube.com/results?search_query=..." formatında arama linki oluştur.
+        4. Aşağıdaki HTML formatında yanıt ver.
 
-        VİDEO TALİMATI (ÇOK ÖNEMLİ):
-        1. Google Arama aracını kullanarak konuyla ilgili YOUTUBE videolarını ara.
-        2. Eğer videonun DOĞRUDAN LİNKİNİ bulamazsan veya emin değilsen, YouTube Arama Linki oluştur.
-           Örnek Arama Linki Formatı: https://www.youtube.com/results?search_query=bugday+pas+hastaligi+tedavisi
-        3. ASLA çalışmayan veya uydurma link verme.
-
-        ÇIKTI FORMATI:
-        Aşağıdaki HTML şablonunu kullan. Tasarım "keskin, endüstriyel ve teknik" olmalı.
-
+        HTML ŞABLONU:
         <div class="sharp-card p-8 border-t-8 border-orange-600 bg-white">
-            <div class="flex flex-col md:flex-row justify-between items-start gap-4">
-                <div>
-                    <span class="bg-gray-900 text-white text-xs font-bold px-3 py-1 uppercase tracking-widest">TESPİT RAPORU</span>
-                    <h2 class="text-4xl font-bold text-gray-900 mt-3 uppercase tracking-wide">[BİTKİ ADI]</h2>
-                    <h3 class="text-2xl text-orange-600 font-bold uppercase mt-1">[TESPİT EDİLEN SORUN]</h3>
-                </div>
-                <div class="text-left md:text-right bg-gray-100 p-3 border border-gray-300">
-                    <div class="text-xs text-gray-500 font-mono font-bold">SESSION ID: AI-${Math.floor(Math.random() * 10000)}</div>
-                    <div class="text-xs text-gray-500 font-mono font-bold">DATE: ${new Date().toLocaleDateString('tr-TR')}</div>
-                    <div class="text-xs text-green-600 font-mono font-bold mt-1">CONFIDENCE: HIGH</div>
-                </div>
-            </div>
-            <div class="mt-8 bg-gray-50 border-l-4 border-gray-400 p-6 text-gray-700 leading-relaxed font-roboto text-lg">
-                <i class="fa-solid fa-magnifying-glass mr-2 text-orange-500"></i>
-                [DETAYLI ANALİZ METNİ. TEKNİK VE PROFESYONEL BİR DİL KULLAN.]
+            <h2 class="text-4xl font-bold text-gray-900 uppercase">[BİTKİ ADI]</h2>
+            <h3 class="text-2xl text-orange-600 font-bold uppercase mt-1">[TESPİT EDİLEN SORUN]</h3>
+            <div class="mt-6 bg-gray-50 border-l-4 border-gray-400 p-6 text-gray-700 text-lg">
+                [ANALİZ DETAYLARI]
             </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="sharp-card p-6 bg-white border-l-4 border-orange-500">
-                <h4 class="font-bold text-gray-800 border-b-2 border-gray-100 pb-3 mb-4 flex items-center gap-3 text-lg">
-                    <i class="fa-solid fa-flask text-orange-600 text-xl"></i> KİMYASAL / ORGANİK MÜCADELE
-                </h4>
-                <ul class="space-y-4 font-roboto text-gray-700">
-                    <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-check text-green-600 mt-1"></i>
-                        <span>[ÖNERİ 1]</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-check text-green-600 mt-1"></i>
-                        <span>[ÖNERİ 2]</span>
-                    </li>
+                <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-flask text-orange-600"></i> MÜCADELE</h4>
+                <ul class="space-y-2 text-gray-700">
+                    <li>[MÜCADELE YÖNTEMİ 1]</li>
+                    <li>[MÜCADELE YÖNTEMİ 2]</li>
                 </ul>
             </div>
-            
             <div class="sharp-card p-6 bg-white border-l-4 border-green-700">
-                <h4 class="font-bold text-gray-800 border-b-2 border-gray-100 pb-3 mb-4 flex items-center gap-3 text-lg">
-                    <i class="fa-solid fa-tractor text-green-700 text-xl"></i> KÜLTÜREL ÖNLEMLER
-                </h4>
-                <ul class="space-y-4 font-roboto text-gray-700">
-                     <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-angles-right text-green-700 mt-1"></i>
-                        <span>[ÖNERİ 1]</span>
-                    </li>
-                    <li class="flex items-start gap-3">
-                        <i class="fa-solid fa-angles-right text-green-700 mt-1"></i>
-                        <span>[ÖNERİ 2]</span>
-                    </li>
+                <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-tractor text-green-700"></i> KÜLTÜREL İŞLEMLER</h4>
+                <ul class="space-y-2 text-gray-700">
+                    <li>[ÖNLEM 1]</li>
+                    <li>[ÖNLEM 2]</li>
                 </ul>
-            </div>
-        </div>
-
-        <div class="sharp-card p-6 bg-gray-900 text-white">
-            <h4 class="font-bold text-gray-400 text-xs uppercase tracking-[0.2em] mb-6 border-b border-gray-700 pb-2">OPTİMİZASYON VERİLERİ</h4>
-            <div class="grid grid-cols-3 gap-6 text-center">
-                <div class="border-r border-gray-700 pr-2">
-                    <i class="fa-solid fa-droplet text-blue-500 text-3xl mb-3"></i>
-                    <div class="font-bold text-xl tracking-wide">[SULAMA]</div>
-                    <div class="text-[10px] text-gray-500 uppercase mt-1">SIKLIK</div>
-                </div>
-                <div class="border-r border-gray-700 pr-2">
-                    <i class="fa-solid fa-sun text-yellow-500 text-3xl mb-3"></i>
-                    <div class="font-bold text-xl tracking-wide">[IŞIK]</div>
-                    <div class="text-[10px] text-gray-500 uppercase mt-1">GEREKSİNİM</div>
-                </div>
-                <div>
-                    <i class="fa-solid fa-seedling text-green-500 text-3xl mb-3"></i>
-                    <div class="font-bold text-xl tracking-wide">[GÜBRE]</div>
-                    <div class="text-[10px] text-gray-500 uppercase mt-1">BESİN</div>
-                </div>
             </div>
         </div>
 
         <div class="space-y-4">
              <h4 class="font-bold text-gray-800 text-lg uppercase flex items-center gap-2">
-                <i class="fa-solid fa-video text-red-600"></i> EĞİTİM MATERYALLERİ
+                <i class="fa-solid fa-video text-red-600"></i> EĞİTİM VİDEOLARI
              </h4>
-             
              <a href="[VIDEO_LINKI_1]" target="_blank" class="video-card block p-6 flex items-center justify-between group shadow-sm">
                 <div class="flex items-center gap-5">
-                    <div class="w-14 h-14 bg-red-600 text-white flex items-center justify-center font-bold text-2xl rounded-sm shadow-md group-hover:bg-red-700 transition">
+                    <div class="w-12 h-12 bg-red-600 text-white flex items-center justify-center font-bold text-2xl rounded-sm">
                         <i class="fa-brands fa-youtube"></i>
                     </div>
                     <div>
-                        <div class="font-bold text-xl text-gray-900 group-hover:text-orange-600 transition uppercase">[VIDEO BAŞLIĞI 1]</div>
-                        <div class="text-sm text-gray-500 font-roboto mt-1">YouTube'da Görüntüle</div>
-                    </div>
-                </div>
-                <i class="fa-solid fa-external-link text-gray-400 group-hover:text-orange-500"></i>
-             </a>
