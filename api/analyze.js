@@ -1,6 +1,15 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 module.exports = async (req, res) => {
+  // CORS headers (gerekirse)
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -10,12 +19,10 @@ module.exports = async (req, res) => {
     const apiKey = process.env.GEMINI_API_KEY;
     
     if (!apiKey) {
-      throw new Error("GEMINI_API_KEY environment variable bulunamadı.");
+      throw new Error("GEMINI_API_KEY environment variable not found");
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    
-    // En güncel ve hızlı model
     const model = genAI.getGenerativeModel({ 
       model: "gemini-2.0-flash-exp",
       generationConfig: {
@@ -45,22 +52,9 @@ module.exports = async (req, res) => {
     res.status(200).json({ result: text });
 
   } catch (error) {
-    console.error("API Hatası:", error);
-    
-    // Daha detaylı hata mesajları
-    let errorMessage = "Sunucu tarafında işlem hatası.";
-    
-    if (error.message.includes("API key")) {
-      errorMessage = "API anahtarı geçersiz veya eksik.";
-    } else if (error.message.includes("quota")) {
-      errorMessage = "API kullanım kotası aşıldı.";
-    } else if (error.message.includes("model")) {
-      errorMessage = "Model bulunamadı veya desteklenmiyor.";
-    }
-    
+    console.error("API Error:", error);
     res.status(500).json({ 
-      error: errorMessage,
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: error.message || "Server error during analysis"
     });
   }
 };
