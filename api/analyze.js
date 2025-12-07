@@ -1,7 +1,7 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 module.exports = async (req, res) => {
-  // CORS headers (gerekirse)
+  // CORS ayarları
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -23,8 +23,13 @@ module.exports = async (req, res) => {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
+    
+    // DÜZELTME BURADA:
+    // 1. Model ismini 'gemini-1.5-flash' olarak düzelttim (2.5 henüz yok).
+    // 2. 'tools: [{ googleSearch: {} }]' ekledim ki YouTube videolarını bulabilsin.
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash-exp",
+      model: "gemini-1.5-flash",
+      tools: [{ googleSearch: {} }],
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 2048,
