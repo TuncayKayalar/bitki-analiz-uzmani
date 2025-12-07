@@ -56,7 +56,7 @@
     <div class="bg-gray-800 text-white py-12 relative overflow-hidden border-b border-gray-700">
         <div class="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center grayscale"></div>
         <div class="container mx-auto px-4 relative z-10">
-            <div class="inline-block bg-orange-600 text-white text-xs font-bold px-2 py-1 mb-3 skew-x-[-10deg]">V2.0 STABLE</div>
+            <div class="inline-block bg-orange-600 text-white text-xs font-bold px-2 py-1 mb-3 skew-x-[-10deg]">V2.1 STABLE</div>
             <h2 class="text-4xl md:text-5xl font-bold mb-2 tracking-tight">AKILLI TESPİT SİSTEMİ</h2>
             <p class="text-gray-400 text-lg max-w-xl font-light font-roboto">Endüstriyel görüntü işleme teknolojisi.</p>
         </div>
@@ -184,13 +184,12 @@
         GÖREV:
         1. Kullanıcının bitki fotoğrafını veya sorusunu analiz et.
         2. Teşhis, Mücadele Yöntemleri ve Bakım önerileri sun.
-        3. Konuyla ilgili YouTube videoları için DOĞRUDAN arama linkleri oluştur.
+        3. YouTube videoları için DOĞRUDAN arama linkleri oluştur. (Asla video ID uydurma).
         
         VİDEO LİNK FORMATI (Bunu kesinlikle uygula):
         Linkleri şu formatta oluştur: https://www.youtube.com/results?search_query=[BITKI_ADI]+[HASTALIK_ADI]+cozumu
         (Örn: https://www.youtube.com/results?search_query=domates+mildiyo+ilaci)
-        Bu sayede linkler asla kırık olmaz.
-
+        
         ÇIKTI FORMATI:
         Aşağıdaki HTML şablonunu kullan. Asla Markdown kullanma.
 
@@ -221,7 +220,7 @@
 
         <div class="space-y-4">
              <h4 class="font-bold text-gray-800 text-lg uppercase flex items-center gap-2">
-                <i class="fa-solid fa-video text-red-600"></i> EĞİTİM VİDEOLARI
+                <i class="fa-solid fa-video text-red-600"></i> EĞİTİM VİDEOLARI (YOUTUBE ARAMA)
              </h4>
              
              <a href="https://www.youtube.com/results?search_query=[ARAMA_TERIMI_1]" target="_blank" class="video-card block p-6 flex items-center justify-between group shadow-sm">
@@ -234,6 +233,7 @@
                         <div class="text-sm text-gray-500">İlgili Videoları Listele</div>
                     </div>
                 </div>
+                <i class="fa-solid fa-external-link text-gray-400"></i>
              </a>
              
              <a href="https://www.youtube.com/results?search_query=[ARAMA_TERIMI_2]" target="_blank" class="video-card block p-6 flex items-center justify-between group shadow-sm">
@@ -246,6 +246,7 @@
                         <div class="text-sm text-gray-500">İlgili Videoları Listele</div>
                     </div>
                 </div>
+                <i class="fa-solid fa-external-link text-gray-400"></i>
              </a>
         </div>
         `;
