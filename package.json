@@ -1,7 +1,16 @@
 {
   "name": "agroai-system",
   "version": "2.1.0",
+  "description": "Akıllı Tarım Teknolojileri - AI Destekli Bitki Hastalık Analizi",
+  "main": "api/analyze.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build needed'"
+  },
   "dependencies": {
     "@google/generative-ai": "^0.21.0"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
